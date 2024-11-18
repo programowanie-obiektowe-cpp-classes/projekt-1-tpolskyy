@@ -73,9 +73,11 @@ int main() {
             case 7: {
                 double amount;
                 int months;
+                std::cout << "Max loan amount: " << company.getMaxAllowedDebt() << ".\n" ;
                 std::cout << "Enter loan amount: ";
                 std::cin >> amount;
-                std::cout << "Enter repayment duration (months, max 12): ";
+                std::cout << "Max repayment duration: "<< MAX_LOAN_MONTHS << ".\n" ;
+                std::cout << "Enter repayment duration: ";
                 std::cin >> months;
                 company.takeLoan(amount, months);
                 break;

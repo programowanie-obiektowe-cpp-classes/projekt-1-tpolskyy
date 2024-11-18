@@ -201,15 +201,45 @@ public:
 
     // pozyczka
     void takeLoan(double amount, int months) {
-        if (months > 12) {
-            std::cout << "Maximum loan duration is 12 months.\n";
-            return;
-        }
-        double monthlyPayment = (amount + (amount * 0.05 * months)) / months;
-        loans.push_back({amount, monthlyPayment, months});
-        funds += amount;
-        std::cout << "Loan of $" << amount << " taken. Monthly payment: $" << monthlyPayment << "\n";
+    // Sprawdzenie maksymalnego czasu spłaty
+    if (months > MAX_LOAN_MONTHS) {
+        std::cout << "Maximum loan duration is " << MAX_LOAN_MONTHS << " months.\n";
+        return;
     }
+
+    // Obliczenie całkowitego zadłużenia
+    double totalDebt = 0.0;
+    for (const auto& loan : loans) {
+        totalDebt += loan.amount;
+    }
+
+    // Sprawdzenie maksymalnego zadłużenia
+    double maxAllowedDebt = calculateCompanyValue() * MAX_DEBT_RATIO;
+    if (totalDebt + amount > maxAllowedDebt) {
+        std::cout << "Loan denied. Total debt cannot exceed " 
+                  << MAX_DEBT_RATIO << " × company value ($" 
+                  << maxAllowedDebt << ").\n";
+        return;
+    }
+
+    // Obliczanie miesięcznej raty z rosnącymi odsetkami
+    double interestRate = 0.02 + 0.01 * months; // Podstawowe oprocentowanie rośnie o 1% za każdy miesiąc
+    double totalAmountToRepay = amount * (1 + interestRate * months);
+    double monthlyPayment = totalAmountToRepay / months;
+
+    // Dodanie pożyczki
+    loans.push_back({amount, monthlyPayment, months});
+    funds += amount;
+
+    std::cout << "Loan of $" << amount << " taken for " << months 
+              << " months. Monthly payment: $" << monthlyPayment 
+              << ". Total repayment: $" << totalAmountToRepay << "\n";
+    }
+
+    double getMaxAllowedDebt() const {
+    return calculateCompanyValue() * MAX_DEBT_RATIO;
+    }
+
     //splata pozyczki w turze
     void payLoans() {
         double totalLoanPayment = 0;
