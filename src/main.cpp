@@ -1,4 +1,4 @@
-#include "D:\STUDIA\C++\PROJEKT_1\projekt-1-tpolskyy\include\Company.hpp"
+#include "Company.hpp"
 #include <iostream>
 
 int main() {
